@@ -18,11 +18,11 @@ The basic functionalities has been addded:
 There is still a lot of work that has to be done
  
 ## HOW TO INSTALL
-If you have nothing better to do:
-1. Go to **System > Tools > Compilations** and disable it
-2. Backup your store database and web directory
-3. Upload and  unzip the module in your magento root folder
-4. Completely clear the site cache
+
+ 1. Go to **System > Tools > Compilations** and disable it
+ 2. Backup your store database and web directory
+ 3. Upload and  unzip the module in your magento root folder
+ 4. Completely clear the site cache
 
 ### HOW TO ENABLE
  Activate or deactivate the module

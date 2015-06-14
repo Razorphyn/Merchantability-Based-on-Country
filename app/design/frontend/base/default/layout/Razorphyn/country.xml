@@ -1,0 +1,34 @@
+<layout version="0.1.0">
+	<default>
+		<reference name="head">
+			<action method="addItem"><type>js</type><name>razorphyn/country.js</name><params/></action>
+			<action method="addCss"><stylesheet>css/Razorphyn/css/country.css</stylesheet></action>
+		</reference>
+		
+		<reference name="header">
+			<reference name="top.container">
+				<block type="core/template" name="razorphyn.costumer.country" template="Razorphyn/country/top.phtml">
+					<action method="unsetData"><key>cache_lifetime</key></action>
+					<action method="unsetData"><key>cache_tags</key></action>
+				</block>
+			</reference>
+		</reference>
+		
+		<reference name="footer">
+			<block type="core/template" name="razorphyn.country.index" template="Razorphyn/country/js/ini.phtml" />
+		</reference>
+	</default>
+		
+	<country_ajax_updatecountry>
+		<block type="core/template" name="razorphyn.country.update" template="Razorphyn/country/js/ajax.phtml"  output="toHtml" />
+	</country_ajax_updatecountry>
+	
+	<razorphyn_country_module_button_identifier>
+		<reference name="footer">
+			<block type="core/template" name="razorphyn.country.index" template="Razorphyn/country/js/ajaxConfig.phtml">
+				<action method="unsetData"><key>cache_lifetime</key></action>
+				<action method="unsetData"><key>cache_tags</key></action>
+			</block>
+		</reference>
+	</razorphyn_country_module_button_identifier>
+</layout>

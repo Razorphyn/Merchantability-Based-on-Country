@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--/**
+ * Limit Product per Countries
+ * Author: Razorphyn
+ * Suport Email: est.garndi@gmail.com
+ * Copyright: MIT License (http://opensource.org/licenses/MIT)
+**/-->
+<config>
+	<modules>
+		<Razorphyn_Country>
+			<active>true</active>
+			<codePool>community</codePool>
+		</Razorphyn_Country>
+	</modules>
+</config>

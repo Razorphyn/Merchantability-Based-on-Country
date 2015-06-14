@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <razorphyn translate="label" module="country">
+            <label>Razorphyn</label>
+            <sort_order>100</sort_order>
+        </razorphyn>
+    </tabs>
+
+    <sections>
+        <razorphyn translate="label" module="country">
+            <label>Country Limiter Options</label>
+            <tab>razorphyn</tab>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+ 
+            <groups>
+                <razorphyn_country_group translate="label" module="country">
+                    <label>Product Country Limiter Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+ 
+                    <fields>
+                        <razorphyn_country_active translate="Enabled">
+                            <label>Enabled</label>
+                            <comment>Activate or disable extension</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+                        </razorphyn_country_active>
+						<razorphyn_country_config_active translate="Active">
+                            <label>Enable setup</label>
+                            <comment>Set to 'Yes' if you need to identify the "Add to cart" buttons</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+                        </razorphyn_country_config_active>
+                    </fields>
+                </razorphyn_country_group>
+            </groups>
+        </razorphyn>
+    </sections>
+</config>

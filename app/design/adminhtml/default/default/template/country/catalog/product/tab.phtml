@@ -1,0 +1,59 @@
+<?php
+	$id=Mage::app()->getRequest()->getParam('id');
+	$res = Mage::getModel('country/product')->load($id, 'product_id');
+?>
+<table class="form-list" cellspacing="0">
+	<colgroup class="label"></colgroup>
+	<colgroup class="value"></colgroup>
+	<tbody>
+		<tr id='row_enable_product_limiter'>
+			<td class='label'>
+				<label for="limit_active">Limit the merchantability</label>
+			</td>
+			<td class='value'>
+				<select id="enable_product_limiter" name="limit_active" class="select" size="1">
+					<option value="0" <?php if($res->active==0) echo "selected"; ?> >No</option>
+					<option value="1" <?php if($res->active==1) echo "selected"; ?> >Yes</option>
+				</select>
+			</td>
+		</tr>
+		<tr id='row_rule_product_limiter'>
+			<td class='label'>
+				<label for="allowed">This product is</label>
+			</td>
+			<td class='value'>
+				<select id="rule_product_limiter" name="allowed" class="select" size="1">
+					<option value="0" <?php if($res->allowed==0) echo "selected"; ?> >not available</option>
+					<option value="1" <?php if($res->allowed==1) echo "selected"; ?> >available</option>
+				</select>
+			</td>
+		</tr>
+		<tr id='row_country_product_limiter'>
+			<td class='label'>
+				<label for="custom_field">for the following countries</label>
+			</td>
+			<td class='value'>
+				<select id="country_product_limiter" name="country[]" class="select multiselect" multiple="multiple" size="10">
+					<?php
+					$countries = Mage::getModel('adminhtml/system_config_source_country')->toOptionArray(false);
+					if(strpos($res->country,',')){
+						$res->country=explode(',',$res->country);
+						foreach($countries as $_country){
+							if($_country['value']=='')
+								continue;
+							if(!in_array($_country['value'],$res->country))
+								echo '<option value="'.$_country['value'].'" >'.$_country['label'].'</option>';
+							else
+								echo '<option value="'.$_country['value'].'" selected >'.$_country['label'].'</option>';
+						}
+					}
+					else{
+						foreach($countries as $_country)
+							echo '<option value="'.$_country['value'].'" '.($_country['value']==$res->country)?'selected':''.'>'.$_country['label'].'</option>';
+					}
+					?>
+				</select>
+			</td>
+		</tr>
+	</tbody>
+</table>

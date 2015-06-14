@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Razorphyn_Country>
+            <version>0.1.0</version>
+        </Razorphyn_Country>
+    </modules>
+
+    <global>
+		<models>
+			<country>
+                <class>Razorphyn_Country_Model</class>
+				<resourceModel>country_mysql4</resourceModel>
+			</country>
+
+			<country_mysql4>
+				<class>Razorphyn_Country_Model_Mysql4</class>
+                <entities>
+                    <product>
+                        <table>razorphyn_country_product</table>
+                    </product>
+                    <category>
+                        <table>razorphyn_country_category</table>
+                    </category>                    
+                </entities>
+            </country_mysql4>
+        </models>
+		
+		<resources>
+			<country_setup>
+                <setup>
+                    <module>Razorphyn_Country</module>
+                </setup>
+				<connection>
+                    <use>core_setup</use>
+                </connection>
+			</country_setup>
+			<country_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</country_write>
+			<country_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</country_read> 
+        </resources>
+		
+		<blocks>
+            <country>
+                <class>Razorphyn_Country_Block</class>
+            </country>
+        </blocks>
+
+        <helpers>
+            <country>
+                <class>Razorphyn_Country_Helper</class>
+            </country>
+        </helpers>
+    </global>
+	
+	<adminhtml>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<razorphyn>
+											<title>Razorphyn - All</title>
+										</razorphyn>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		
+		<menu>
+            <tutorial_menu translate="title" module="country">
+                <title>Razorphyn</title> 
+                <sort_order>9999</sort_order>
+                <children>
+                    <first_page module="country">
+                        <title>Country Limiter Button Identifier</title> 
+                        <action>country/index/index</action>
+                    </first_page>
+                </children>
+            </tutorial_menu>
+        </menu>
+		
+        <events>
+            <catalog_product_save_after>
+                <observers>
+                    <razorphyn_country_catalog_product_save_after>
+                        <type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>saveProductAllowedCountry</method>
+                    </razorphyn_country_catalog_product_save_after>
+                </observers>
+            </catalog_product_save_after>
+			
+            <catalog_category_save_commit_after>
+                <observers>
+                    <razorphyn_country_catalog_product_save_after>
+                        <type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>saveCategoryAllowedCountry</method>
+                    </razorphyn_country_catalog_product_save_after>
+                </observers>
+            </catalog_category_save_commit_after>
+        </events>
+		
+		<layout>
+            <updates>
+                <country>
+                    <file>country.xml</file>
+                </country>
+            </updates>
+        </layout>
+		
+		<translate>
+            <modules>
+                <Razorphyn_Country>
+                    <files>
+                        <default>Razorphyn_Country.csv</default>
+                    </files>
+                </Razorphyn_Country>
+            </modules>
+        </translate>
+	</adminhtml>
+
+	<frontend>
+		<events>
+			<!-- Retrieve Country as soon as possible Event -->
+			<core_block_abstract_to_html_before>
+                <observers>
+                    <razorphyn_country_controller_front_init_before>
+                        <type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>retrieveCountry</method>
+                    </razorphyn_country_controller_front_init_before>
+                </observers>
+            </core_block_abstract_to_html_before>
+
+			<!-- Page Rendering event -->
+			<!--core_block_abstract_to_html_after-->
+			<core_block_abstract_to_html_after>
+				<observers>
+                    <razorphyn_country_core_block_abstract_to_html_after>
+                        <type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>checkMerchantable</method>
+                    </razorphyn_country_core_block_abstract_to_html_after>
+                </observers>
+			</core_block_abstract_to_html_after>
+			
+			<!-- Add to cart Event -->
+			<controller_action_predispatch_checkout_cart_add>
+                <observers>
+                    <razorphyn_country_controller_action_predispatch_checkout_cart_add>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>checkProductOnAdd</method>
+                    </razorphyn_country_controller_action_predispatch_checkout_cart_add>
+                </observers>
+            </controller_action_predispatch_checkout_cart_add>
+			
+			<!-- Events related to potential address change -->
+			<customer_address_save_after>
+				<observers>
+                    <razorphyn_country_customer_address_save_after>
+                        <type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>updateCartAddress</method>
+                    </razorphyn_country_customer_address_save_after>
+                </observers>
+			</customer_address_save_after>
+			
+			<customer_login>
+				<observers>
+                    <razorphyn_country_customer_login>
+                        <type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>updateCartAddress</method>
+                    </razorphyn_country_customer_login>
+                </observers>
+			</customer_login>
+			
+			<checkout_controller_onepage_save_shipping_method>
+				<observers>
+                    <razorphyn_country_checkout_controller_onepage_save_shipping_method>
+                        <type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>updateCartAddress</method>
+                    </razorphyn_country_checkout_controller_onepage_save_shipping_method>
+                </observers>
+			</checkout_controller_onepage_save_shipping_method>
+			
+			<!-- Change theme to identify button -->
+			<controller_action_layout_load_before>
+                <observers>
+                    <razorphyn_country_controller_action_layout_load_before>
+						<type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>addConfigThemeJs</method>
+                    </razorphyn_country_controller_action_layout_load_before>
+                </observers>
+            </controller_action_layout_load_before>
+        </events>
+
+		<routers>
+			<country>
+				<use>standard</use>
+				<args>
+					<module>Razorphyn_Country</module>
+					<frontName>country</frontName>
+				</args>
+			</country>
+		</routers>
+	
+		<layout>
+			<updates>
+				<country>
+					<file>Razorphyn/country.xml</file>
+				</country>
+			</updates>
+		</layout>
+
+		<translate>
+            <modules>
+                <Razorphyn_Country>
+                    <files>
+                        <default>Razorphyn_Country.csv</default>
+                    </files>
+                </Razorphyn_Country>
+            </modules>
+        </translate>
+
+	</frontend>
+
+	<admin>
+        <routers>
+            <country>
+                <use>admin</use>
+                <args>
+                    <module>Razorphyn_Country</module>
+                    <frontName>country</frontName>
+                </args>
+            </country>
+        </routers>
+    </admin>
+	
+</config>

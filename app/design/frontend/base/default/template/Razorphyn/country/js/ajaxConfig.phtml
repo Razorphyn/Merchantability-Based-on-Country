@@ -1,0 +1,80 @@
+<script type="text/javascript">
+//<![CDATA[
+	document.observe("dom:loaded", function(){
+		var aEl	=	Array.prototype.slice.call(document.getElementsByTagName("a")),
+			bEl	=	Array.prototype.slice.call(document.getElementsByTagName("button")),
+			el	=	aEl.concat(bEl),
+			c=el.length;
+
+		for(i=0;i<c;i++){
+			var ex_event = el[i].getAttribute('onclick');
+			el[i].onclick=null;
+			el[i].onclick = function(e) {
+				if(el[i].getAttribute('disabled')){
+					e.stopImmediatePropagation();
+					e.preventDefault();
+				};
+			};
+			if(ex_event)
+				el[i].onclick = ex_event;
+			
+			el[i].addEventListener("click", function(e){
+				e.stopImmediatePropagation();
+				e.preventDefault();
+				inspectElement(this);
+				return false;
+			},false);
+		}
+
+		function inspectElement(el){
+			var elNodeName = el.nodeName.toLowerCase();
+
+			if(elNodeName=="button" || elNodeName=="a"){
+				var	razCurrentTheme	= "<?php echo Mage::getSingleton('core/design_package')->getPackageName() ?>",
+					elClass			= el.getAttribute("class"),
+					elOnClick 		= el.getAttribute("onclick"),
+					isOnClick		= false,
+					reg				= /checkout\/.?cart\/add\//gmi;
+
+				if (!Array.prototype.indexOf) {
+					Array.prototype.indexOf = function(obj, start) {
+						for (var i = (start || 0), j = el.length; i < j; i++) {
+							if (el[i] === obj) { return i; }
+						}
+						return -1;
+					}
+				}
+
+				if(elOnClick.match(reg) !== null){
+					isOnClick=true;
+				}
+
+				if(confirm("<?php echo Mage::helper('country')->__("Would you save the clicked element as the Add to cart button?");?>")){
+					new Ajax.Request("<?php echo $this->getUrl('country/ajax/saveButton') ?>", {
+						method: "POST",
+						parameters:{
+							theme:razCurrentTheme,
+							productView:<?php echo (Mage::registry('current_product') || Mage::registry('product')) ? 1:0; ?>,
+							nodeName:elNodeName,
+							btClass:elClass,
+							isOnClick:isOnClick
+						},
+						onSuccess:function(transport){
+							var data = transport.responseText.evalJSON();
+							if (200 == transport.status){
+								if(data[0]===true)
+									alert(data[1]);
+								else
+									alert(data[0]);
+							}
+						},
+						onFailure:  function (){
+							alert("<?php echo Mage::helper('country')->__("Saving process failed");?>" );
+						}
+					});
+				}
+			}
+		}
+	});
+//]]>
+</script>

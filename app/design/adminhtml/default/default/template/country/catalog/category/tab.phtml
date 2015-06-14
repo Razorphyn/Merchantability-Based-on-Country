@@ -1,0 +1,93 @@
+<table class="form-list" cellspacing="0">
+	<colgroup class="label"></colgroup>
+	<colgroup class="value"></colgroup>
+	<colgroup class="label"></colgroup>
+	<tbody>
+		<tr id='row_enable_category_limiter'>
+			<td class='label'>
+				<label for="limit_active">Limit the merchantability</label>
+			</td>
+			<td class='value'>
+				<select id="enable_category_limiter" name="limit_active" class="select" size="1">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</select>
+			</td>
+		</tr>
+		<tr id='row_rule_category_limiter'>
+			<td class='label'>
+				<label for="allowed">This category is</label>
+			</td>
+			<td class='value'>
+				<select id="rule_category_limiter" name="allowed" class="select" size="1">
+					<option value="0">not available</option>
+					<option value="1">available</option>
+				</select>
+			</td>
+			<td class='label'>
+				<label for="allowed">for the following countries</label>
+			</td>
+		</tr>
+		<tr id='row_country_category_limiter'>
+			<td class='label'>
+				<label for="custom_field">Countries</label>
+			</td>
+			<td class='value'>
+				<select id="country_category_limiter" name="country[]" class="select multiselect" multiple="multiple" size="10">
+					<?php
+					$countries = Mage::getModel('adminhtml/system_config_source_country') ->toOptionArray(false);
+					$opt='';
+					foreach($countries as $_country)
+						$opt.='<option value="'.$_country['value'].'">'.$_country['label'].'</option>';
+					echo $opt;
+					?>
+				</select>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script>
+	(function(){
+		<?php
+			$id=Mage::app()->getRequest()->getParam('id');
+			$res = Mage::getModel('country/category')->load($id, 'category_id');
+		?>
+		var opt= document.getElementById('country_category_limiter'),
+			c=options.length,
+			countries="<?php echo $res->allowed; ?>";
+			
+		//document.getElementById('enable_category_limiter').options[<?php echo $res->active; ?>].selected = 'selected';
+		//document.getElementById('rule_category_limiter').options[<?php echo $res->allowed; ?>].selected = 'selected';			
+		
+		document.getElementById('enable_category_limiter').selectedIndex = <?php echo $res->active; ?>;
+		document.getElementById('rule_category_limiter').selectedIndex = <?php echo $res->allowed; ?>;
+		
+		if (!Array.prototype.indexOf) {
+			Array.prototype.indexOf = function(obj, start) {
+				for (var i = (start || 0), j = this.length; i < j; i++) {
+					if (this[i] === obj) { return i; }
+				}
+				return -1;
+			}
+		}
+		
+		if(countries.length>0){
+			if(countries.indexOf(',')!=-1){
+				countries=countries.split(',');
+			}
+			for(i=0;i<c;i++){
+				opt.options[i].selected = false;
+				if(countries.indexOf(opt.options[i].value)!=-1){
+					opt.options[i].selected = true;
+				}
+			}
+		}
+	});
+	
+</script>
+
+
+
+
+
+

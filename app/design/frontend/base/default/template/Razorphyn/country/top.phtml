@@ -1,0 +1,20 @@
+<?php 
+	$_countries = Mage::getResourceModel('directory/country_collection')->loadData()->toOptionArray(false);
+	$visitorCountry = Mage::getSingleton('core/session')->getRazorphynCountry();
+	$visitorCountry = (!empty($visitorCountry))? $visitorCountry:null;
+	
+	//Add a way to select the current country; cache may interferes?
+?>
+<?php if (count($_countries) > 0): ?>
+	<select name="razorphyn_country" id="razorphyn_country">
+		<option value="" <?php if(empty($visitorCountry)){echo 'selected';} ?>><?php echo Mage::helper('country')->__("Select your country")?></option>
+		<?php 
+			foreach($_countries as $_country){
+				if($visitorCountry!=$_country['value'])
+					echo '<option value="'.$_country['value'].'" >'.$_country['label'].'</option>';
+				else
+					echo '<option value="'.$_country['value'].'" selected >'.$_country['label'].'</option>';
+			}
+		?>
+	</select>
+<?php endif; ?>

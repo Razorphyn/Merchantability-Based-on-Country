@@ -1,0 +1,79 @@
+<script type="text/javascript">
+//<![CDATA[
+document.observe('dom:loaded', function(){
+	document.getElementById("razorphyn_country").addEventListener('change', function(){//check
+		if (!Array.prototype.indexOf) {
+			Array.prototype.indexOf = function(obj, start) {
+				for (var i = (start || 0), j = this.length; i < j; i++) {
+					if (this[i] === obj) { return i; }
+				}
+				return -1;
+			};
+		}
+										
+		var e = this,
+			country = e.options[e.selectedIndex].value;
+
+		new Ajax.Request('<?php echo $this->getUrl('country/ajax/updateCountry') ?>', {
+				method: 'POST',
+				parameters: {country:country},
+				onSuccess:function(r){
+								if (200 == r.status){
+									/* 
+										0-> remove? true:false
+										1-> button? true:false
+										2-> items to remove
+										3-> button classes
+										4-> Replace phrase
+									*/	
+									if(r[0]){
+										JSON.parse(r[2]);
+										var fNode=(r[1])? "BUTTON":"FORM",
+											el=document.getElementsByTagName(fNode),
+											c=el.length,
+											id,
+											replaceP= document.createElement('p'),
+											reg= /checkout\/cart\/add.+\/([0-9]+)\//;
+											
+										replaceP.innerHTML=r[4];
+
+										if(fNode=="FORM"){
+											for(i=0;i<c;i++){
+												id=(el[i].getAttribute('action').match(reg));
+												id=id[0];
+												if(r[2].indexOf(id)!=-1){
+													var btChildren = el[1].querySelectorAll('button'+r[3]),
+														btC= btChildren.length;
+
+													for(j=0;j<btC;i++){
+														el[i].replaceChild(replaceP,btChildren[j]);
+													}
+												}
+											}
+										}
+										else{
+											r[3]=trim(r[3].replace(',',' '));
+											for(i=0;i<c;i++){
+												if(el[i].getAttribute('class')==r[3]){
+													id=(el[i].getAttribute('onclick').match(reg));
+													id=id[0];
+													if(r[2].indexOf(id)!=-1){
+														el[i].parentNode.replaceChild(replaceP,el[i]);
+													}
+												}
+											}
+										}
+									}
+								}
+								else{
+									alert("Can't contact server" );
+								}
+					},
+				onFailure:  function (r){
+								alert("Country update failed" );
+							}
+			});
+	});
+});
+//]]>
+</script>

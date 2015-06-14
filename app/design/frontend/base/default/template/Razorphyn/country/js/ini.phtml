@@ -1,0 +1,21 @@
+<?php
+	$product=Mage::registry('current_product');
+	if(!empty($product))
+		$product_id = $product->getId();
+	else
+		$product_id = '';
+	
+	$category = Mage::registry('current_category');
+	//$category = Mage::getSingleton('catalog/layer')->getCurrentCategory();
+	
+	if(!empty($category))
+		$category_id = $category->getId();
+	else
+		$category_id = '';
+
+?>
+<script type="text/javascript">
+		razorphynPathUpdateCountry='<?php echo $this->getUrl('country/ajax/updateCountry') ?>',
+		razorphynCurrentProductCountry='<?php echo $product_id ?>',
+		razorphynCurrentCategoryCountry='<?php echo $category_id ?>';
+</script>

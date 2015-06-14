@@ -38,9 +38,7 @@ class Razorphyn_Country_Model_Observer{
 
 			if(!isset($stored->$theme->product))
 				return;
-			
-			
-			
+
 			$dom = new DOMDocument();
 			$dom->loadHTML($html);
 
@@ -132,11 +130,8 @@ class Razorphyn_Country_Model_Observer{
 			$stored = json_decode(Mage::getStoreConfig('razorphyn/country/buttons'));
 			$theme=trim(Mage::getSingleton('core/design_package')->getPackageName());
 
-			echo '<pre>'.var_export($stored->$theme->category,true).'</pre>';
-
 			if(!isset($stored->$theme->category))
 				return;
-			echo 'entered';
 			
 			$dom = new DOMDocument();
 			$dom->loadHTML($html);
@@ -164,8 +159,6 @@ class Razorphyn_Country_Model_Observer{
 				$queryDom='//form[contains(@action,"/checkout/cart/add/")]//button[@class="'.trim(str_replace('.',' ',$stored->$theme->category->eClass)).'"]';
 				
 				$results  = $xpath->query($queryDom);
-				
-				echo '<pre>'.var_export($results,true).'</pre>';
 				
 				foreach ($results as $result) {
 					$form=$result->parentNode;

@@ -12,6 +12,7 @@ The basic functionalities has been addded:
  * Cart check on country change(not tested)
  * AJAX country change (incomplete/not tested)
  * Some others
+
 **Efficiency**: car with elliptcal wheels
 **Readability**: Ugh..
 

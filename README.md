@@ -1,5 +1,6 @@
 # Merchantability-Based-on-Country
 Limit the availabilty of a product based on customer country
+My aim is to achieve this result without any template change = heavy
 
 ## Project Status
 Pre-Alpha

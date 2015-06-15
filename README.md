@@ -3,6 +3,7 @@ Limit the availabilty of a product based on customer country
 
 ## Project Status
 Pre-Alpha
+
 The basic functionalities has been addded:
  * Autonomous (based on IP) and manual(dropdown in header) country detection
  * Save product country option
@@ -30,8 +31,16 @@ There is still a lot of work that has to be done
  System > Configuration > Razorphyn > Country Limiter Option > Enable : YES  or NO
 
  
- ### CONFIGURE THE MODULE
+### CONFIGURE THE MODULE
   Set to yes to configure the module
   1. System > Configuration > Razorphyn > Country Limiter Option >Enable setup : yes
   2. Razorphyn > Country Limiter Button Identifier
-  3. Follow the links, you will be redirected to a product or category page where you have to click the add to cart button, once an succesfull alert pops up you can close the page and go on
+  3. Follow the links, you will be redirected to a product or category page where you have to click the add to cart button, once an succesfull alert pops up you can close the page and go on with the next link
+ 
+### HOW TO USE
+ 1. Create a new product
+ 2. Complete all the required fields
+ 3. Press "Save and Continue" (or save and then reopen the product)
+ 4. A new section: "Country Limiter" will appear at the bottom of the left column
+
+If you want to edit an already created product the section will be already there

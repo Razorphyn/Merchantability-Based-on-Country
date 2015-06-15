@@ -36,20 +36,35 @@
 				<select id="country_product_limiter" name="country[]" class="select multiselect" multiple="multiple" size="10">
 					<?php
 					$countries = Mage::getModel('adminhtml/system_config_source_country')->toOptionArray(false);
-					if(strpos($res->country,',')){
-						$res->country=explode(',',$res->country);
-						foreach($countries as $_country){
-							if($_country['value']=='')
-								continue;
-							if(!in_array($_country['value'],$res->country))
-								echo '<option value="'.$_country['value'].'" >'.$_country['label'].'</option>';
-							else
-								echo '<option value="'.$_country['value'].'" selected >'.$_country['label'].'</option>';
+
+					if($res->country){
+						if(strpos($res->country,',')){
+							$res->country=explode(',',$res->country);
+							foreach($countries as $_country){
+								if($_country['value']=='')
+									continue;
+								
+								$selected=(!in_array($_country['value'],$res->country)) ? '':"selected";
+								echo '<option value="'.$_country['value'].'" '.$selected.' >'.$_country['label'].'</option>';
+							}
+						}
+						else{
+							foreach($countries as $_country){
+								if($_country['value']=='')
+									continue;
+
+								$selected=($_country['value']==$res->country)?'selected':'';
+								echo '<option value="'.$_country['value'].'" '.$selected.'>'.$_country['label'].'</option>';
+							}
 						}
 					}
 					else{
-						foreach($countries as $_country)
-							echo '<option value="'.$_country['value'].'" '.($_country['value']==$res->country)?'selected':''.'>'.$_country['label'].'</option>';
+						foreach($countries as $_country){
+							if($_country['value']=='')
+									continue;
+
+							echo '<option value="'.$_country['value'].'" >'.$_country['label'].'</option>';
+						}
 					}
 					?>
 				</select>

@@ -8,7 +8,7 @@ The basic functionalities has been addded:
  * Autonomous (based on IP) and manual(dropdown in header) country detection
  * Save product country option
  * Two rules: available or not availbale for the selected countries
- * Remove button for simple product (tested) in category and product view page
+ * Remove the main button for simple product (tested) in category and product view page
  * Block add to cart action for limited
  * Cart check on country change(not tested)
  * AJAX country change (incomplete/not tested)
@@ -18,7 +18,16 @@ The basic functionalities has been addded:
 **Readability**: Ugh..
 
 There is still a lot of work that has to be done
- 
+ **Compatible products**:
+  * Simple - Tested
+  * Configurable Product - Basically a "bruteforce" not tested
+  * Grouped Product - To do
+  * Bundled Product - To do
+  * Related product - to do
+  * cross-sells - to do
+  * Up-sells - to do
+  
+  
 ## HOW TO INSTALL
 
  1. Go to **System > Tools > Compilations** and disable it

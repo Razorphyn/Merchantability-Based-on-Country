@@ -214,6 +214,18 @@
                     </razorphyn_country_controller_action_layout_load_before>
                 </observers>
             </controller_action_layout_load_before>
+			
+			<!-- Remove up-sell items -->
+			<catalog_product_upsell>
+                <observers>
+                    <razorphyn_country_catalog_product_upsell>
+						<type>singleton</type>
+                        <class>Razorphyn_Country_Model_Observer</class>
+                        <method>checkUpsell</method>
+                    </razorphyn_country_catalog_product_upsell>
+                </observers>
+            </catalog_product_upsell>
+			
         </events>
 
 		<routers>

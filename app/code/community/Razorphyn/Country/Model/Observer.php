@@ -17,7 +17,7 @@ class Razorphyn_Country_Model_Observer{
 	 * @return boolean
 	 */
 
-	public function checkMerchantable(Varien_Event_Observer $observer){//seems ok - little fox has to be done to avoid config page
+	public function checkMerchantable(Varien_Event_Observer $observer){//seems ok - little fix has to be done to avoid config page
 		$enConfig = Mage::getSingleton('core/session')->getRazorphynCountryConfig();
 		//To do: don't go further if config page
 		if(!self::isModuleEnabled() || $enConfig==1){
@@ -50,11 +50,11 @@ class Razorphyn_Country_Model_Observer{
 														   
 			$res = $collection->getFirstItem();
 			$countries= $res->country;
+			$xpath  = new DOMXPath($dom);
 			
 			if($res->active==1 && !empty($visitorCountry) && (($res->allowed==0 && strpos($countries, $visitorCountry) !== false) || ($res->allowed==1 && strpos($countries, $visitorCountry) === false))){
 				$queryDom=($stored->$theme->product->isOnClick)?'//button[@class="'.trim(str_replace('.',' ',$stored->$theme->product->eClass)).'" and contains(@onclick,"/checkout/cart/add/")]':'//button[@class="'.trim(str_replace('.',' ',$stored->$theme->product->eClass)).'"]';
 				
-				$xpath  = new DOMXPath($dom);
 				$results  = $xpath->query($queryDom);
 				
 				$newNode = $dom->createElement("p", Mage::helper('country')->__("This product isn't available in your country."));
@@ -65,7 +65,6 @@ class Razorphyn_Country_Model_Observer{
 
 					$result->parentNode->replaceChild($newNode, $result);
 				}
-				$html = $dom->saveHTML();
 			}
 
 			if( Mage::registry('current_product')->getTypeId()=='configurable'){ //to be checked
@@ -115,16 +114,22 @@ class Razorphyn_Country_Model_Observer{
 					}
 					$removedOpt=implode("\n",$removedOpt);
 					
-					//Ugh...ehm...replace the already printed json with the new one...
-					preg_replace('/new\s*Product\.Config\((.*)\)/',$json,$html);
+					$results  = $xpath->query('//script');
+					
+					foreach($results as $res){
+						//Ugh...ehm...replace the already printed json with the new one...
+						preg_replace('/new\s*Product\.Config\((.*)\)/',$json,$html);
+					}
 					Mage::getSingleton('core/session')->addNotice(Mage::helper('country')->__("The following options are not available in your country:")."\n".$removedOpt);
+					
 				}
 			}
-
+			
+			$html = $dom->saveHTML();
 			$transport->setHtml($html);
 		}
-		else if ($block instanceof Mage_Catalog_Block_Category_View){//check
-		
+		else if ($block instanceof Mage_Catalog_Block_Category_View || $block instanceof Mage_Cms_Block_Page){//check
+
 			$transport = $observer->getTransport();
 			$html = $transport->getHtml();
 			$stored = json_decode(Mage::getStoreConfig('razorphyn/country/buttons'));
@@ -198,7 +203,7 @@ class Razorphyn_Country_Model_Observer{
      * @return boolean
      */
 
-	public function updateCartAddress(Varien_Event_Observer $observer){//to do
+	public function updateCartAddress(Varien_Event_Observer $observer){//to be checked
 		if(!self::isModuleEnabled()){
 			return;
 		}
@@ -215,28 +220,59 @@ class Razorphyn_Country_Model_Observer{
 		if(count($productsId)==0)
 			return;
 
-		$collection = Mage::getModel('country/product')->getCollection()
+		$collection = Mage::getModel('country/product') ->getCollection()
 														->addAttributeToFilter('active', 1)
 														->addAttributeToFilter('product_id', array('in' => $productsId));
-		
-		foreach($collection as $res){
-			if(($res->allowed==0 && strpos($countries, $country) !== false) || ($res->allowed==1 && strpos($countries, $country) === false)){
-				$cart->getCart()->removeItem($res->getProductId())->save();
-				//to do:Collect all the removed product name and send back
-				$error=true;
+		if($collection->length >0){
+			foreach($collection as $res){
+				if(($res->allowed==0 && strpos($countries, $country) !== false) || ($res->allowed==1 && strpos($countries, $country) === false)){
+					$cart->getCart()->removeItem($res->product_id)->save();
+					//to do:Collect all the removed product name and send back
+					$error=true;
+				}
+			}
+			if($error){
+				//To do: Add removed products name
+				Mage::getSingleton('core/session')->addError(Mage::helper('country')->__("Sorry, some of the products you have added to the cart aren't available in your country"));
+				return;
 			}
 		}
-		if($error){
-			//To do: Add removed products name
-			Mage::getSingleton('core/session')->addError(Mage::helper('country')->__("Sorry, some of the products you have added to the cart aren't available in your country"));
-			exit();
-		}
 	}
+	
+	
+	/**
+	 * Check and remove not available items
+	 * catalog_product_upsell
+	 *
+	 */
+	 
+	 public function checkUpsell(Varien_Event_Observer $observer){
+		if(!self::isModuleEnabled()){
+			return;
+		}
+		
+		$upsell =$observer->getEvent()->getCollection();
+		$ids =array();
+		foreach($upsell as $item){
+			$ids[]=$item->getId();
+		}
+		$collection = Mage::getModel('country/product') ->getCollection()
+														->addAttributeToFilter('active', 1)
+														->addAttributeToFilter('product_id', array('in' => $ids));
+		if($collection->length >0){
+			$country = Mage::getSingleton('core/session')->getRazorphynCountry;
+			foreach($collection as $res){
+				if(($res->allowed==0 && strpos($countries, $country) !== false) || ($res->allowed==1 && strpos($countries, $country) === false)){
+					$upsell->removeItemByKey($res->product_id);
+				}
+			}
+		}
+	 }
 	
 	/**
      * Prevent adding prohibited products to cart
      * controller_action_predispatch_checkout_cart_add
-     * @return boolean
+     *
      */
 
 	public function checkProductOnAdd(Varien_Event_Observer $observer){//seems ok

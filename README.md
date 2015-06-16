@@ -17,6 +17,7 @@ The basic functionalities has been addded:
  * Some others
 
 **Efficiency**: car with elliptcal wheels
+
 **Readability**: Ugh..
 
 There is still a lot of work that has to be done
@@ -27,11 +28,10 @@ There is still a lot of work that has to be done
   * Bundled Product - To do
   * Related product - to do
   * cross-sells - to do
-  * Up-sells - to do
+  * Up-sells - to be checked
   
   
-## HOW TO INSTALL
-
+### HOW TO INSTALL
  1. Go to **System > Tools > Compilations** and disable it
  2. Backup your store database and web directory
  3. Upload and  unzip the module in your magento root folder

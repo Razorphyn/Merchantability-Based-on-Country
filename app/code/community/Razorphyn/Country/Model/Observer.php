@@ -251,7 +251,7 @@ class Razorphyn_Country_Model_Observer{
 			return;
 		}
 		
-		$upsell =$observer->getEvent()->getCollection();
+		$upsell = $observer->getEvent()->getCollection();
 		$ids =array();
 		foreach($upsell as $item){
 			$ids[]=$item->getId();
@@ -267,6 +267,7 @@ class Razorphyn_Country_Model_Observer{
 				}
 			}
 		}
+		return $upsell;
 	 }
 	
 	/**
